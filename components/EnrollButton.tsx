@@ -1,5 +1,6 @@
 "use client";
 
+import { createStripeCheckout } from "@/actions/createStripeCheckout";
 // import { createStripeCheckout } from "@/actions/createStripeCheckout";
 import { useUser } from "@clerk/nextjs";
 import { CheckCircle } from "lucide-react";
@@ -18,22 +19,22 @@ function EnrollButton({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  // const handleEnroll = async (courseId: string) => {
-  //   startTransition(async () => {
-  //     try {
-  //       const userId = user?.id;
-  //       if (!userId) return;
+  const handleEnroll = async (courseId: string) => {
+    startTransition(async () => {
+      try {
+        const userId = user?.id;
+        if (!userId) return;
 
-  //       const { url } = await createStripeCheckout(courseId, userId);
-  //       if (url) {
-  //         router.push(url);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error in handleEnroll:", error);
-  //       throw new Error("Failed to create checkout session");
-  //     }
-  //   });
-  // };
+        const { url } = await createStripeCheckout(courseId, userId);
+        if (url) {
+          router.push(url);
+        }
+      } catch (error) {
+        console.error("Error in handleEnroll:", error);
+        throw new Error("Failed to create checkout session");
+      }
+    });
+  };
 
   // Show loading state while checking user is loading
   if (!isUserLoaded || isPending) {
@@ -41,6 +42,7 @@ function EnrollButton({
       <div className="w-full h-12 rounded-lg bg-gray-100 flex items-center justify-center">
         <div className="w-5 h-5 border-2 border-gray-400 border-t-gray-600 rounded-full animate-spin" />
       </div>
+
     );
   }
 
@@ -69,7 +71,7 @@ function EnrollButton({
         }
       `}
       disabled={!user?.id || isPending}
-      // onClick={() => handleEnroll(courseId)}
+      onClick={() => handleEnroll(courseId)}
     >
       {!user?.id ? (
         <span className={`${isPending ? "opacity-0" : "opacity-100"}`}>
