@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
         hostname: "cdn.sanity.io",
         protocol: "https",
       },
+      {
+        hostname: "img.clerk.com",
+        protocol: "https",
+      }
     ],
   },
   
